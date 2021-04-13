@@ -16,6 +16,7 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <dirent.h>
 #include <sys/select.h>
 
 /*liste chainne pour le client
@@ -30,23 +31,30 @@ while head != null
 */
 typedef struct client {
     int fd;
-    char *path;
+    char *cdir;
+    char *CMD;
     struct client *next;
 } client_t;
 
-int main();
+typedef struct parse {
+    char *commande;
+    char *args;
+};
+
+int main(int ac, char **av);
 void helper();
 
 //create socket return fd for select;
 int starting_serv(int, int);
 
 //running serv with select
-int running_serv(int fd);
+int running_serv(int fd, char *directory);
 int error_handle(int ac, char **av);
 
 //client
 //new connection
 void new_connection(client_t**, int fd);
+void check_client_file(client_t **list_client, fd_set *read_fds);
 void check_allfdset(fd_set *read_fds, int *fdmax, int fd, client_t **list_client);
 
 #endif /* !MY_FTP_H_ */

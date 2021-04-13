@@ -40,6 +40,6 @@ int main(int ac, char **av)
     if (error_handle(ac, av) == 84)
         return 84;
     fd = starting_serv(atoi(av[1]), INADDR_ANY);
-    running_serv(fd);
+    running_serv(fd, av[2]);
     return (0);
 }

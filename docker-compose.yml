@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+  ftp:
+    image: 'archlinux:latest'
+    volumes:
+      - ./myftp:/usr/bin/myftp
+    ports:
+      - 1300:1300
+    command: myftp 1300
