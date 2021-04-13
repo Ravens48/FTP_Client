@@ -23,16 +23,24 @@ int starting_serv(int port, int adress)
     address.sin_addr.s_addr = htonl(INADDR_ANY);
     address.sin_port = htons(port);
     //mettre une garde ?
-    bind(socketfd,(const struct sockaddr *)&address, sizeof(struct sockaddr_in));
+    if (bind(socketfd,(const struct sockaddr *)&address, sizeof(struct sockaddr_in)) == 1)
+        return (84);
     //peut etre mettre avant le select
     return socketfd;
 }
 
 void new_connection(client_t **list_client, int fd)
 {
+    struct sockaddr_in address;
+    socklen_t adrlen = sizeof(struct sockaddr_in);
+    int fd_accept;                                                                                                                        
+    if (fd_accept = accept(fd, (struct sockaddr *)&address, &adrlen) == -1) {
+        return;
+    }
+    printf("NEW CLIENT CONNECTION\n");
     client_t * new_client = malloc(sizeof(client_t));
     client_t *ptr = *list_client;
-    new_client->fd = fd;
+    new_client->fd = fd_accept;
     // new_client->path
     new_client->next = NULL;
     //boucler dans la liste et ajouter un client
@@ -47,17 +55,18 @@ void new_connection(client_t **list_client, int fd)
     ptr->next = new_client;
 }
 
-void check_allfdset(fd_set *read_fds, int *fdmax, int fd, client_t **list_client)
+
+void check_allfdset(fd_set *fds, int *fdmax, int fd, client_t **list_client)
 {
     //remet a zero
-    FD_ZERO(read_fds);
-    FD_SET (fd, read_fds);
+    FD_ZERO(fds);
+    FD_SET (fd, fds);
     client_t *ptr = *list_client;
 
     //boucle sur les clients ajoute avec FD_Set un nouveau fd
     // et on compare pour changer la taille de fdmax le cas echeant
     while(ptr != NULL) {
-        FD_SET (ptr->fd, read_fds);
+        FD_SET (ptr->fd, fds);
         if (*fdmax < ptr->fd)
                 *fdmax = ptr->fd;
         ptr->next;
@@ -69,22 +78,22 @@ int running_serv(int fd)
 {
     client_t *list_client = NULL;
     int select_return;
+    fd_set read_fds;
+    fd_set write_fds;
+    int fdmax = fd;
     if (listen(fd, 10) < 0) {
-        perror("listen failed");
-        exit(84);
+        return (84);
     }
     while(1) {
-        fd_set read_fds;
-        int fdmax = fd;
         check_allfdset(&read_fds, &fdmax, fd, &list_client);
-        select_return = select(fdmax +1, &read_fds, NULL, NULL, NULL);
+        check_allfdset(&write_fds, &fdmax, fd, &list_client);
+        select_return = select(fdmax +1, &read_fds, &write_fds, NULL, NULL);
         if (select_return == - 1 && errno == EINTR)
             continue;
         if (select_return == -1) {
-            perror("Select failed");
-            return 84;
+            return (84);
         }
-        if (FD_ISSET(fd, &read_fds) != -1)
+        else if (FD_ISSET(fd, &read_fds))
             new_connection(&list_client, fd);
     }
     close(fd);
