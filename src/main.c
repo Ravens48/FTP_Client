@@ -20,7 +20,7 @@ int error_handle(int ac, char **av)
         printf("Need arguments\n");
         return(84);
     }
-    else if (ac == 2 && strcmp(av[1], "-helper") == 0) {
+    else if (ac == 2 && strcmp(av[1], "-help") == 0) {
         helper();
         return 84;
     }

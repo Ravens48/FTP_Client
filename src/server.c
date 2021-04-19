@@ -18,7 +18,7 @@ int starting_serv(int port, int adress)
         exit(84);
     }
     //utile pour reutiliser un port
-    setsockopt(socketfd, SOL_SOCKET, SO_REUSEPORT | SO_REUSEADDR, NULL, 0);
+    setsockopt(socketfd, SOL_SOCKET, SO_REUSEADDR, NULL, 0);
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = htonl(INADDR_ANY);
     address.sin_port = htons(port);
@@ -29,7 +29,7 @@ int starting_serv(int port, int adress)
     return socketfd;
 }
 
-void new_connection(client_t **list_client, int fd)
+void new_connection(client_t **list_client, int fd, message_t **list_msg)
 {
     struct sockaddr_in address;
     socklen_t adrlen = sizeof(struct sockaddr_in);
@@ -41,9 +41,10 @@ void new_connection(client_t **list_client, int fd)
     client_t * new_client = malloc(sizeof(client_t));
     client_t *ptr = *list_client;
     new_client->fd = fd_accept;
+
+    add_message_to_list("Service ready for new user.", "220", list_msg);
     // new_client->path
     new_client->next = NULL;
-    printf("%d\n", new_client->fd);
     //boucler dans la liste et ajouter un client
     if (ptr == NULL) {
         *list_client = new_client;
@@ -57,42 +58,12 @@ void new_connection(client_t **list_client, int fd)
 }
 
 
-void check_allfdset(fd_set *fds, int *fdmax, int fd, client_t **list_client)
-{
-    //remet a zero
-    FD_ZERO(fds);
-    FD_SET (fd, fds);
-    client_t *ptr = *list_client;
-
-
-    //boucle sur les clients ajoute avec FD_Set un nouveau fd
-    // et on compare pour changer la taille de fdmax le cas echeant
-    while(ptr != NULL) {
-        FD_SET (ptr->fd, fds);
-        if (*fdmax < ptr->fd)
-                *fdmax = ptr->fd;
-        ptr = ptr->next;
-    }
-}
-
-void check_client_file(client_t **list_client, fd_set *read_fds)
-{
-    //boucler read sur les fichier des users
-    client_t *ptr = *list_client;
-    while(ptr != NULL) {
-        if (FD_ISSET(ptr->fd, read_fds)) {
-            ptr->CMD = malloc(sizeof(char)* 128);
-            if (read(ptr->fd, ptr->CMD, 128) == -1)
-                return;
-            printf("%s\n", ptr->CMD);
-        }
-        ptr = ptr->next;
-    }
-}
 
 int running_serv(int fd, char *dir)
 {
+    //sauvegarder le dir dans la struct du user ?
     client_t *list_client = NULL;
+    message_t *list_message = NULL;
     int select_return;
     fd_set read_fds;
     fd_set write_fds;
@@ -102,16 +73,18 @@ int running_serv(int fd, char *dir)
     }
     while(1) {
         check_allfdset(&read_fds, &fdmax, fd, &list_client);
-        // check_allfdset(&write_fds, &fdmax, fd, &list_client);
-        select_return = select(fdmax +1, &read_fds, NULL, NULL, NULL);
+        //a utiliser + tard quand je vais devoir ecrire un message
+        check_write_fdset(&write_fds, fd, &list_client, &list_message);
+        select_return = select(fdmax +1, &read_fds, &write_fds, NULL, NULL);
         if (select_return == - 1 && errno == EINTR)
             continue;
         if (select_return == -1) {
             return (84);
         }
         else if (FD_ISSET(fd, &read_fds))
-            new_connection(&list_client, fd);
+            new_connection(&list_client, fd, &list_message);
         check_client_file(&list_client, &read_fds);
+        check_client_write_file(&list_client, &write_fds, &list_message);
     }
     close(fd);
 }
@@ -138,6 +111,17 @@ et renvoie un tableau juste avec les fd modifier et ce qui est pret a etre lu
 pass a pointer index
 */
 
-//faire parsing
+//comprendre a quel moment il a fini d'ecrire son message
+//utiliser un pointeurs a deplacer pour recuperer la srting en entier RFC
+//
+//faire parsing de ce qu'as eccrit le user
 //faire tableau de pointeurs sur fonction
+//faire une liste chainne des reponses a envoyer
+
+//faire une structure message que je peux utiliser dans la structure
+//client
+//int et message, pour pouvoir repondre + facilement.
+//
 //tester
+
+//faire un buffer de taille limite
