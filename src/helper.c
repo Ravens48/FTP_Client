@@ -59,3 +59,40 @@ void *pop_message(message_t **list_msg)
     ptr->next = NULL;
 }
 
+void *pop_client(client_t **list_client)
+{
+    void *node = NULL;
+    client_t *ptr = *list_client;
+
+    if (ptr == NULL) {
+        free(ptr->CMD);
+        free(ptr->cdir);
+        free(ptr); 
+        return NULL;
+    }
+    if (ptr->next == NULL) {
+        free(ptr->CMD);
+        free(ptr->cdir);
+        free(ptr);
+        *list_client = NULL;
+        return node;
+    }
+    while (ptr->next->next != NULL)
+        ptr = ptr->next;
+    free(ptr->next);
+    ptr->next = NULL;
+}
+
+/* Checks whether the value x is present in linked list */
+void search_and_destroy(client_t **list_client, int client_fd)
+{
+    client_t *ptr = *list_client;
+    client_t *s_ptr = NULL;
+    while (ptr != NULL)
+    {
+        s_ptr = ptr->next;
+        if (ptr->fd == client_fd)
+            pop_client(&ptr);
+        ptr = s_ptr;
+    }
+}

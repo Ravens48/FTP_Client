@@ -39,6 +39,8 @@ void new_connection(client_t **list_client, int fd)
     }
     printf("NEW CLIENT CONNECTION\n");
     client_t * new_client = malloc(sizeof(client_t));
+    new_client->cdir = NULL;
+    new_client->CMD = NULL;
     new_client->msg = NULL;
     client_t *ptr = *list_client;
     new_client->fd = fd_accept;
