@@ -12,19 +12,20 @@ void send_message_to_client(int fd, char *message, char* code)
 {
     char *buffer = malloc(sizeof(char) * 1024);
     
-    snprintf(buffer, strlen(message) + strlen(code), "%s %s\n\r", code, message);
+    snprintf(buffer, strlen(message) + strlen(code) + 1, "%s %s\r\n", code, message);
 
-    printf("buffer : %s\n", buffer);
     write(fd, buffer, strlen(buffer+1));
+    free(buffer);
     return;
 }
 
 
-void add_message_to_list(char * message, char* code,message_t **list_msg)
+void add_message_to_list(char * message, char* code, message_t **list_msg)
 {
     message_t *list_m = malloc(sizeof(message_t));
     message_t *ptr = *list_msg;
 
+    printf("ADDING A MESSAGE\n");
     list_m->message = message;
     list_m->code = code;
     list_m->next = NULL;

@@ -71,13 +71,13 @@ void save_message_to_send();
 
 //client
 //new connection
-void new_connection(client_t**, int fd, message_t**);
+void new_connection(client_t**, int fd);
 
 //check
 void check_client_file(client_t **list_client, fd_set *read_fds);
 void check_allfdset(fd_set *read_fds, int *fdmax, int fd, client_t **list_client);
-void check_client_write_file(client_t **list_client, fd_set *write_fds, message_t **list_message);
-void check_write_fdset(fd_set *fds, int fd, client_t **list_client, message_t **list_message);
+void check_client_write_file(client_t **list_client, fd_set *write_fds);
+void check_write_fdset(fd_set *fds, int fd, client_t **list_client);
 
 //helper
 void *pop_message(message_t **list_msg);

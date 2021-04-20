@@ -29,7 +29,7 @@ int starting_serv(int port, int adress)
     return socketfd;
 }
 
-void new_connection(client_t **list_client, int fd, message_t **list_msg)
+void new_connection(client_t **list_client, int fd)
 {
     struct sockaddr_in address;
     socklen_t adrlen = sizeof(struct sockaddr_in);
@@ -39,10 +39,12 @@ void new_connection(client_t **list_client, int fd, message_t **list_msg)
     }
     printf("NEW CLIENT CONNECTION\n");
     client_t * new_client = malloc(sizeof(client_t));
+    new_client->msg = NULL;
     client_t *ptr = *list_client;
     new_client->fd = fd_accept;
 
-    add_message_to_list("Service ready for new user.", "220", list_msg);
+    printf("client fd: %d\n", new_client->fd);
+    add_message_to_list("Service ready for new user.", "220", &new_client->msg);
     // new_client->path
     new_client->next = NULL;
     //boucler dans la liste et ajouter un client
@@ -74,7 +76,7 @@ int running_serv(int fd, char *dir)
     while(1) {
         check_allfdset(&read_fds, &fdmax, fd, &list_client);
         //a utiliser + tard quand je vais devoir ecrire un message
-        check_write_fdset(&write_fds, fd, &list_client, &list_message);
+        check_write_fdset(&write_fds, fd, &list_client);
         select_return = select(fdmax +1, &read_fds, &write_fds, NULL, NULL);
         if (select_return == - 1 && errno == EINTR)
             continue;
@@ -82,9 +84,9 @@ int running_serv(int fd, char *dir)
             return (84);
         }
         else if (FD_ISSET(fd, &read_fds))
-            new_connection(&list_client, fd, &list_message);
+            new_connection(&list_client, fd);
+        check_client_write_file(&list_client, &write_fds);
         check_client_file(&list_client, &read_fds);
-        check_client_write_file(&list_client, &write_fds, &list_message);
     }
     close(fd);
 }
