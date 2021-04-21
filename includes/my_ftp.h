@@ -35,18 +35,20 @@ typedef struct message {
     struct message *next;
 } message_t;
 
+typedef struct parse {
+    char *commande;
+    char *args;
+    struct parse *next;
+} parse_t;
+
 typedef struct client {
     int fd;
     char *cdir;
     char *CMD;
     struct client *next;
     message_t *msg;
+    parse_t *parsing;
 } client_t;
-
-typedef struct parse {
-    char *commande;
-    char *args;
-} parse_t;
 
 
 int main(int ac, char **av);
@@ -75,12 +77,16 @@ void new_connection(client_t**, int fd);
 
 //check
 void check_client_file(client_t **list_client, fd_set *read_fds);
-void check_allfdset(fd_set *read_fds, int *fdmax, int fd, client_t **list_client);
+void check_read_fdset(fd_set *read_fds, int *fdmax, int fd, client_t **list_client);
 void check_client_write_file(client_t **list_client, fd_set *write_fds);
 void check_write_fdset(fd_set *fds, int fd, client_t **list_client);
 
 //helper
 void *pop_message(message_t **list_msg);
 void search_and_destroy(client_t **list_client, int client_fd);
-void *pop_client(client_t **list_client);
+void pop_client(client_t **list_client, client_t *delete_client);
+void free_my_client(client_t *client);
+void free_my_message(message_t *message);
+void free_my_parse(parse_t *parse);
+void parsing_fd_receive(char *cmd, parse_t **parsing);
 #endif /* !MY_FTP_H_ */

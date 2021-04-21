@@ -11,6 +11,7 @@ int starting_serv(int port, int adress)
 {
     struct sockaddr_in address;
     int socketfd;
+    int yes = 1;
 
     socketfd = socket(AF_INET, SOCK_STREAM, 0);
     if (socketfd == -1) {
@@ -18,7 +19,7 @@ int starting_serv(int port, int adress)
         exit(84);
     }
     //utile pour reutiliser un port
-    setsockopt(socketfd, SOL_SOCKET, SO_REUSEADDR, NULL, 0);
+    setsockopt(socketfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes));
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = htonl(INADDR_ANY);
     address.sin_port = htons(port);
@@ -42,10 +43,10 @@ void new_connection(client_t **list_client, int fd)
     new_client->cdir = NULL;
     new_client->CMD = NULL;
     new_client->msg = NULL;
+    new_client->parsing = NULL;
     client_t *ptr = *list_client;
     new_client->fd = fd_accept;
-
-    printf("client fd: %d\n", new_client->fd);
+    // printf("client fd: %d\n", new_client->fd);
     add_message_to_list("Service ready for new user.", "220", &new_client->msg);
     // new_client->path
     new_client->next = NULL;
@@ -59,6 +60,7 @@ void new_connection(client_t **list_client, int fd)
         ptr = ptr->next;
     }
     ptr->next = new_client;
+    // printf("QUIT NEW CLIENT CONNECTION\n");
 }
 
 
@@ -76,7 +78,7 @@ int running_serv(int fd, char *dir)
         return (84);
     }
     while(1) {
-        check_allfdset(&read_fds, &fdmax, fd, &list_client);
+        check_read_fdset(&read_fds, &fdmax, fd, &list_client);
         //a utiliser + tard quand je vais devoir ecrire un message
         check_write_fdset(&write_fds, fd, &list_client);
         select_return = select(fdmax +1, &read_fds, &write_fds, NULL, NULL);
@@ -129,3 +131,4 @@ pass a pointer index
 //tester
 
 //faire un buffer de taille limite
+//faire un enum pour le truc des users

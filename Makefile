@@ -7,6 +7,8 @@ RM		= rm -f
 SRCS	= src/main.c \
 		  src/helper.c \
 		  src/checking_function.c \
+		  src/parsing_gesture.c	\
+		  src/free_my_homies.c \
 		  src/server.c
 
 OBJS	= $(SRCS:.c=.o)
