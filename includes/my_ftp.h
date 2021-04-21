@@ -20,15 +20,15 @@
 #include <sys/select.h>
 
 /*liste chainne pour le client
-
-//pacours 
-
-cleint *ptr = head;
-while head != null
-
-//fonction init
-
 */
+
+typedef enum State {
+    ONLY_USER = -1,
+    ONLY_PASS = 0,
+    LOGGED = 1,
+    DISCONNECT = 2
+} State;
+
 typedef struct message {
     char* code;
     char *message;
@@ -43,6 +43,7 @@ typedef struct parse {
 
 typedef struct client {
     int fd;
+    int state;
     char *cdir;
     char *CMD;
     struct client *next;
@@ -50,6 +51,18 @@ typedef struct client {
     parse_t *parsing;
 } client_t;
 
+void p_quit(char *args, client_t *client);
+
+typedef struct flag_s 
+{
+    char* flag;
+    void (*callback)(char *args, client_t* client);
+} flag_t;
+
+static const flag_t tab_function[] = {
+    {"QUIT", &p_quit},
+    {"\0", NULL}
+};
 
 int main(int ac, char **av);
 void helper();
@@ -88,5 +101,7 @@ void pop_client(client_t **list_client, client_t *delete_client);
 void free_my_client(client_t *client);
 void free_my_message(message_t *message);
 void free_my_parse(parse_t *parse);
-void parsing_fd_receive(char *cmd, parse_t **parsing);
+void parsing_fd_receive(char *cmd, parse_t **parsing, client_t *client);
+int check_flag(char *flag);
+
 #endif /* !MY_FTP_H_ */

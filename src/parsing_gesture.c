@@ -7,12 +7,19 @@
 
 #include "../includes/my_ftp.h"
 
-void parsing_fd_receive(char *cmd, parse_t **parsing) {
+void parsing_fd_receive(char *cmd, parse_t **parsing, client_t *client) {
     char *copy_cmd;
+    int i = -1;
     parse_t *ptr = malloc(sizeof(parse_t));
     ptr->args = malloc(sizeof(char)* 1024);
     ptr->commande = malloc(sizeof(char)* 1024);
     ptr->next = NULL;
     copy_cmd = strdup(cmd);
-    printf("cmd : %s\n", copy_cmd);
+    ptr->commande = strtok(copy_cmd, " \r\n \0");
+    ptr->args = strtok(NULL, "\0");
+    i = check_flag(ptr->commande);
+    if (i != -1) {
+        tab_function[i].callback(ptr->args, client);
+    }
+
 }

@@ -69,7 +69,6 @@ int running_serv(int fd, char *dir)
 {
     //sauvegarder le dir dans la struct du user ?
     client_t *list_client = NULL;
-    message_t *list_message = NULL;
     int select_return;
     fd_set read_fds;
     fd_set write_fds;

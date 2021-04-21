@@ -56,7 +56,7 @@ void check_client_file(client_t **list_client, fd_set *read_fds)
     while(ptr != NULL) {
         if (FD_ISSET(ptr->fd, read_fds)) {
             ptr->CMD = malloc(sizeof(char)* 1024);
-            if ((r_read = read(ptr->fd, ptr->CMD, 1024)) <= 0) 
+            if (((r_read = read(ptr->fd, ptr->CMD, 1024)) <= 0) || ptr->state == DISCONNECT) 
             {
                 temp = ptr->next;
                 close(ptr->fd);
@@ -70,7 +70,7 @@ void check_client_file(client_t **list_client, fd_set *read_fds)
             //ah oui on parle de delete le client ici
         //    printf("%s\n", ptr->CMD);
             ptr->CMD[r_read] = '\0';
-            parsing_fd_receive(ptr->CMD, &ptr->parsing);
+            parsing_fd_receive(ptr->CMD, &ptr->parsing, ptr);
         }
         ptr = ptr->next;
     }

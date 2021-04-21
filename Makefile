@@ -9,6 +9,7 @@ SRCS	= src/main.c \
 		  src/checking_function.c \
 		  src/parsing_gesture.c	\
 		  src/free_my_homies.c \
+		  src/function_pointer.c \
 		  src/server.c
 
 OBJS	= $(SRCS:.c=.o)
