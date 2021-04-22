@@ -44,6 +44,8 @@ void new_connection(client_t **list_client, int fd)
     new_client->CMD = NULL;
     new_client->msg = NULL;
     new_client->parsing = NULL;
+    new_client->state = UNKNOW;
+    new_client->valid_user = 0;
     client_t *ptr = *list_client;
     new_client->fd = fd_accept;
     // printf("client fd: %d\n", new_client->fd);

@@ -36,6 +36,7 @@ int error_handle(int ac, char **av)
 
 int main(int ac, char **av)
 {
+    setbuf(stdout, NULL);
     int fd;
     if (error_handle(ac, av) == 84)
         return 84;

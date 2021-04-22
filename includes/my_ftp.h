@@ -23,6 +23,7 @@
 */
 
 typedef enum State {
+    UNKNOW = -2,
     ONLY_USER = -1,
     ONLY_PASS = 0,
     LOGGED = 1,
@@ -44,6 +45,7 @@ typedef struct parse {
 typedef struct client {
     int fd;
     int state;
+    int valid_user;
     char *cdir;
     char *CMD;
     struct client *next;
@@ -52,6 +54,12 @@ typedef struct client {
 } client_t;
 
 void p_quit(char *args, client_t *client);
+void p_user_identify(char *args, client_t *client);
+void p_user_connect(char *args, client_t *client);
+// void p_print_directory(char *args, client_t *client);
+void p_noop(char *args, client_t *client);
+// void p_unknow_commande(char *args, client_t *client);
+
 
 typedef struct flag_s 
 {
@@ -61,6 +69,10 @@ typedef struct flag_s
 
 static const flag_t tab_function[] = {
     {"QUIT", &p_quit},
+    {"USER", &p_user_identify},
+    {"PASS", &p_user_connect},
+    // {"PWD", &p_print_directory},
+    {"NOOP", &p_noop},
     {"\0", NULL}
 };
 

@@ -56,8 +56,9 @@ void check_client_file(client_t **list_client, fd_set *read_fds)
     while(ptr != NULL) {
         if (FD_ISSET(ptr->fd, read_fds)) {
             ptr->CMD = malloc(sizeof(char)* 1024);
-            if (((r_read = read(ptr->fd, ptr->CMD, 1024)) <= 0) || ptr->state == DISCONNECT) 
+            if (((r_read = read(ptr->fd, ptr->CMD, 1024)) <= 0)) 
             {
+                printf("STATE in CHECKING %d\n", ptr->state);
                 temp = ptr->next;
                 close(ptr->fd);
                 search_and_destroy(list_client, ptr->fd);
@@ -84,12 +85,21 @@ void check_client_write_file(client_t **list_client, fd_set *write_fds)
     //boucle infini dans le write check quand je quitte
     //liste de message vide rien a envoyer
     client_t *ptr = *list_client;
+    client_t *temp = NULL;
     // message_t *ptr_message = *list_message;
     while(ptr != NULL) {
 //    printf("fdclient in write: %d\n", ptr->fd);
         if (FD_ISSET(ptr->fd, write_fds) && ptr->msg != NULL) {
             send_message_to_client(ptr->fd, ptr->msg->message, ptr->msg->code);
             pop_message(&ptr->msg);
+        }
+        if (ptr->state == DISCONNECT) {
+            printf("STATE in CHECKING %d\n", ptr->state);
+            temp = ptr->next;
+            close(ptr->fd);
+            search_and_destroy(list_client, ptr->fd);
+            ptr = temp;
+            continue;
         }
         printf("FD CLIENT IN WRITE: %d\n", ptr->fd);
         ptr = ptr->next;
