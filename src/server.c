@@ -18,15 +18,12 @@ int starting_serv(int port, int adress)
         perror("socket fd failed");
         exit(84);
     }
-    //utile pour reutiliser un port
     setsockopt(socketfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes));
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = htonl(INADDR_ANY);
     address.sin_port = htons(port);
-    //mettre une garde ?
     if (bind(socketfd,(const struct sockaddr *)&address, sizeof(struct sockaddr_in)) == 1)
         return (84);
-    //peut etre mettre avant le select
     return socketfd;
 }
 
@@ -55,7 +52,6 @@ void new_connection(client_t **list_client, int fd, char *dir)
     set_up_new_client(new_client, fd_accept, dir);
     client_t *ptr = *list_client;
     add_message_to_list("Service ready for new user.", "220", &new_client->msg);
-    // new_client->path
     new_client->next = NULL;
     if (ptr == NULL) {
         *list_client = new_client;
@@ -80,7 +76,6 @@ int running_serv(int fd, char *dir)
         return (84);
     while(1) {
         check_read_fdset(&read_fds, &fdmax, fd, &list_client);
-        //a utiliser + tard quand je vais devoir ecrire un message
         check_write_fdset(&write_fds, fd, &list_client);
         select_return = select(fdmax +1, &read_fds, &write_fds, NULL, NULL);
         if (select_return == - 1 && errno == EINTR)

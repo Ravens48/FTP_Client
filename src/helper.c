@@ -18,13 +18,11 @@ void send_message_to_client(int fd, char *message, char* code)
     return;
 }
 
-
 void add_message_to_list(char * message, char* code, message_t **list_msg)
 {
     message_t *list_m = malloc(sizeof(message_t));
     message_t *ptr = *list_msg;
 
-    printf("ADDING A MESSAGE\n");
     list_m->message = message;
     list_m->code = code;
     list_m->next = NULL;
@@ -37,9 +35,7 @@ void add_message_to_list(char * message, char* code, message_t **list_msg)
         ptr = ptr->next;
     }
     ptr->next = list_m;
-    printf("SORT DE ADDING\n");
 }
-
 
 void *pop_message(message_t **list_msg)
 {
@@ -59,8 +55,6 @@ void *pop_message(message_t **list_msg)
     ptr->next = NULL;
 }
 
-
-/* Checks whether the value x is present in linked list */
 void search_and_destroy(client_t **list_client, int client_fd)
 {
     client_t *ptr = *list_client;
@@ -68,11 +62,8 @@ void search_and_destroy(client_t **list_client, int client_fd)
     while (ptr != NULL)
     {
         if (ptr->fd == client_fd) {
-            // pop_client(list_client, ptr);
-            //dans le cas ou c'est le premier
             if (s_ptr == NULL)
                 *list_client = ptr->next;
-            //dans le cas ou non
             else {
                 s_ptr->next = ptr->next;
             }
