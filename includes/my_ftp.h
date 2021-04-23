@@ -59,6 +59,7 @@ void p_user_identify(char *args, client_t *client);
 void p_user_connect(char *args, client_t *client);
 void p_print_directory(char *args, client_t *client);
 void p_change_directory(char *args, client_t *client);
+void p_change_to_parent(char *args, client_t *client);
 void p_help(char *args, client_t *client);
 void p_noop(char *args, client_t *client);
 // void p_unknow
@@ -75,6 +76,7 @@ static const flag_t tab_function[] = {
     {"PASS", &p_user_connect},
     {"PWD", &p_print_directory},
     {"CWD", &p_change_directory},
+    {"CDUP", &p_change_to_parent},
     {"HELP", *p_help},
     {"NOOP", &p_noop},
     {"\0", NULL}
