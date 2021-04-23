@@ -27,15 +27,16 @@ void p_change_directory(char *args, client_t *client)
         if (args != NULL) {
             DIR *dir;
             char *buffer = malloc((sizeof(char) * 1024));
-            snprintf(buffer, strlen(args) + strlen(client->parent_dir) +2, "%s/%s\r\n", client->parent_dir, args);
+            snprintf(buffer, strlen(args) + strlen(client->parent_dir)
+            +2, "%s/%s\r\n",client->parent_dir, args);
             if ((dir = opendir(buffer)) != NULL) {
                 client->cdir = strdup(buffer);
                 add_message_to_list("CWD okay.", "200", &client->msg);
             }
             else {
-                add_message_to_list("Failed to change directory.", "550", &client->msg);
+                add_message_to_list("Failed to change directory.",
+                "550", &client->msg);
             }
-            //si je free
             free(buffer);
         }
     }

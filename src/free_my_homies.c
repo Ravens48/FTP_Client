@@ -13,11 +13,11 @@ void free_my_client(client_t *client)
     parse_t *parse = client->parsing;
 
     free(client->CMD);
-    while(msg != NULL) {
+    while (msg != NULL) {
         free_my_message(msg);
         msg = msg->next;
     }
-    while(parse != NULL) {
+    while (parse != NULL) {
         free_my_parse(parse);
         parse = parse->next;
     }

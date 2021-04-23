@@ -22,12 +22,13 @@ int starting_serv(int port, int adress)
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = htonl(INADDR_ANY);
     address.sin_port = htons(port);
-    if (bind(socketfd,(const struct sockaddr *)&address, sizeof(struct sockaddr_in)) == 1)
+    if (bind(socketfd,(const struct sockaddr *)&address,
+    sizeof(struct sockaddr_in)) == 1)
         return (84);
     return socketfd;
 }
 
-void set_up_new_client(client_t *new_client, int fd_accept, char* dir)
+void set_up_new_client(client_t *new_client, int fd_accept, char *dir)
 {
     new_client->cdir = dir;
     new_client->parent_dir = dir;
@@ -37,33 +38,33 @@ void set_up_new_client(client_t *new_client, int fd_accept, char* dir)
     new_client->state = UNKNOW;
     new_client->valid_user = 0;
     new_client->fd = fd_accept;
-} 
+}
 
 void new_connection(client_t **list_client, int fd, char *dir)
 {
     struct sockaddr_in address;
     socklen_t adrlen = sizeof(struct sockaddr_in);
-    int fd_accept;                                                                                                                        
-    if ((fd_accept = accept(fd, (struct sockaddr *)&address, &adrlen)) == -1) {
+    int fd_accept;
+    if ((fd_accept = accept(fd, (struct sockaddr *)
+    &address, &adrlen)) == -1) {
         return;
     }
     printf("NEW CLIENT CONNECTION\n");
     client_t * new_client = malloc(sizeof(client_t));
     set_up_new_client(new_client, fd_accept, dir);
     client_t *ptr = *list_client;
-    add_message_to_list("Service ready for new user.", "220", &new_client->msg);
+    add_message_to_list("Service ready for new user.", "220",
+    &new_client->msg);
     new_client->next = NULL;
     if (ptr == NULL) {
         *list_client = new_client;
         return;
     }
-    while(ptr->next != NULL) {
+    while (ptr->next != NULL) {
         ptr = ptr->next;
     }
     ptr->next = new_client;
 }
-
-
 
 int running_serv(int fd, char *dir)
 {
@@ -74,7 +75,7 @@ int running_serv(int fd, char *dir)
     int fdmax = fd;
     if (listen(fd, 10) < 0)
         return (84);
-    while(1) {
+    while (1) {
         check_read_fdset(&read_fds, &fdmax, fd, &list_client);
         check_write_fdset(&write_fds, fd, &list_client);
         select_return = select(fdmax +1, &read_fds, &write_fds, NULL, NULL);

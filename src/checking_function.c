@@ -13,7 +13,7 @@ void check_read_fdset(fd_set *fds, int *fdmax, int fd, client_t **list_client)
     FD_SET (fd, fds);
     client_t *ptr = *list_client;
 
-    while(ptr != NULL) {
+    while (ptr != NULL) {
         FD_SET (ptr->fd, fds);
         if (*fdmax < ptr->fd)
                 *fdmax = ptr->fd;
@@ -25,8 +25,7 @@ void check_write_fdset(fd_set *fds, int fd, client_t **list_client)
 {
     FD_ZERO(fds);
     client_t *ptr = *list_client;
-    while(ptr != NULL)
-        {
+    while (ptr != NULL) {
         if (ptr->msg != NULL)
             FD_SET (ptr->fd, fds);
         ptr = ptr->next;
@@ -38,10 +37,10 @@ void check_client_file(client_t **list_client, fd_set *read_fds)
     client_t *ptr = *list_client;
     client_t *temp = NULL;
     int r_read = 0;
-    while(ptr != NULL) {
+    while (ptr != NULL) {
         if (FD_ISSET(ptr->fd, read_fds)) {
             ptr->CMD = malloc(sizeof(char)* 1024);
-            if (((r_read = read(ptr->fd, ptr->CMD, 1024)) <= 0)) 
+            if (((r_read = read(ptr->fd, ptr->CMD, 1024)) <= 0))
             {
                 temp = ptr->next;
                 close(ptr->fd);
@@ -60,7 +59,7 @@ void check_client_write_file(client_t **list_client, fd_set *write_fds)
 {
     client_t *ptr = *list_client;
     client_t *temp = NULL;
-    while(ptr != NULL) {
+    while (ptr != NULL) {
 
         if (FD_ISSET(ptr->fd, write_fds) && ptr->msg != NULL) {
             send_message_to_client(ptr->fd, ptr->msg->message, ptr->msg->code);

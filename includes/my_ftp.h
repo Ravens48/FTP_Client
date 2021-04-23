@@ -31,7 +31,7 @@ typedef enum State {
 } State;
 
 typedef struct message {
-    char* code;
+    char *code;
     char *message;
     struct message *next;
 } message_t;
@@ -62,9 +62,9 @@ void p_change_directory(char *args, client_t *client);
 void p_help(char *args, client_t *client);
 void p_noop(char *args, client_t *client);
 
-typedef struct flag_s 
+typedef struct flag_s
 {
-    char* flag;
+    char *flag;
     void (*callback)(char *args, client_t* client);
 } flag_t;
 
@@ -94,9 +94,9 @@ int error_handle(int ac, char **av);
 
 //a utiliser directement dans le retour des fonctions definies plus tard pour ajouter le message
 //penser a clear la liste chainee une fois le message envoye
-void add_message_to_list(char * message, char* code, message_t **list_msg);
+void add_message_to_list(char *message, char *code, message_t **list_msg);
 
-void send_message_to_client(int fd, char *message, char* code);
+void send_message_to_client(int fd, char *message, char *code);
 void save_message_to_send();
 
 //client
@@ -105,7 +105,8 @@ void new_connection(client_t**, int fd, char *dir);
 void set_up_new_client(client_t *new_client, int fd_accept, char *dir);
 //check
 void check_client_file(client_t **list_client, fd_set *read_fds);
-void check_read_fdset(fd_set *read_fds, int *fdmax, int fd, client_t **list_client);
+void check_read_fdset(fd_set *read_fds, int *fdmax, int fd,
+client_t **list_client);
 void check_client_write_file(client_t **list_client, fd_set *write_fds);
 void check_write_fdset(fd_set *fds, int fd, client_t **list_client);
 

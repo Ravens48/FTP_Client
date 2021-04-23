@@ -7,7 +7,7 @@
 
 #include "../includes/my_ftp.h"
 
-void helper() 
+void helper()
 {
     printf("USAGE: ./myftp port path\n");
     printf("\t port is the port number on wich the server socket listen\n");
@@ -19,7 +19,7 @@ int error_handle(int ac, char **av)
     DIR *dir;
     if (ac < 3) {
         printf("Need arguments refere to -help\n");
-        return(84);
+        return (84);
     }
     else if (ac == 2 && strcmp(av[1], "-help") == 0) {
         helper();
@@ -28,12 +28,11 @@ int error_handle(int ac, char **av)
     else if (ac >= 2) {
         for (int i = 0; av[1][i] != '\0'; i++) {
             if (av[1][i] < '0' || av[1][i] >'9') {
-                perror("Bad parameters");
                 return 84;
             }
         }
         if (av[2] != NULL) {
-            if((dir = opendir(av[2])) == NULL)
+            if ((dir = opendir(av[2])) == NULL)
                 return 84;
             closedir(dir);
         }
