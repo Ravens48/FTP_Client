@@ -18,6 +18,7 @@ SRCS	= src/main.c \
 		  src/free_my_homies.c \
 		  src/command/function_pointeur.c \
 		  src/command/function_pointeur_second.c \
+		  src/command/directory.c \
 		  src/server.c
 
 OBJS	= $(SRCS:.c=.o)
