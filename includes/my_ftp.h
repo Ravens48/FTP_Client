@@ -47,6 +47,7 @@ typedef struct client {
     int state;
     int valid_user;
     char *cdir;
+    char *parent_dir;
     char *CMD;
     struct client *next;
     message_t *msg;
@@ -56,10 +57,10 @@ typedef struct client {
 void p_quit(char *args, client_t *client);
 void p_user_identify(char *args, client_t *client);
 void p_user_connect(char *args, client_t *client);
-// void p_print_directory(char *args, client_t *client);
+void p_print_directory(char *args, client_t *client);
+void p_change_directory(char *args, client_t *client);
+void p_help(char *args, client_t *client);
 void p_noop(char *args, client_t *client);
-// void p_unknow_commande(char *args, client_t *client);
-
 
 typedef struct flag_s 
 {
@@ -71,7 +72,9 @@ static const flag_t tab_function[] = {
     {"QUIT", &p_quit},
     {"USER", &p_user_identify},
     {"PASS", &p_user_connect},
-    // {"PWD", &p_print_directory},
+    {"PWD", &p_print_directory},
+    {"CWD", &p_change_directory},
+    {"HELP", *p_help},
     {"NOOP", &p_noop},
     {"\0", NULL}
 };
@@ -98,8 +101,8 @@ void save_message_to_send();
 
 //client
 //new connection
-void new_connection(client_t**, int fd);
-
+void new_connection(client_t**, int fd, char *dir);
+void set_up_new_client(client_t *new_client, int fd_accept, char *dir);
 //check
 void check_client_file(client_t **list_client, fd_set *read_fds);
 void check_read_fdset(fd_set *read_fds, int *fdmax, int fd, client_t **list_client);
