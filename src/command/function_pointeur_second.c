@@ -17,7 +17,7 @@ void p_print_directory(char *args, client_t *client)
         }
     }
     else {
-        add_message_to_list("Login with USER first.", "503", &client->msg);
+        add_message_to_list("Login with USER first.", "530", &client->msg);
     }
 }
 

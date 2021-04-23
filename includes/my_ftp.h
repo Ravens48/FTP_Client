@@ -61,6 +61,7 @@ void p_print_directory(char *args, client_t *client);
 void p_change_directory(char *args, client_t *client);
 void p_help(char *args, client_t *client);
 void p_noop(char *args, client_t *client);
+// void p_unknow
 
 typedef struct flag_s
 {
@@ -118,6 +119,6 @@ void free_my_client(client_t *client);
 void free_my_message(message_t *message);
 void free_my_parse(parse_t *parse);
 void parsing_fd_receive(char *cmd, parse_t **parsing, client_t *client);
-int check_flag(char *flag);
+int check_flag(char *flag, client_t *client);
 
 #endif /* !MY_FTP_H_ */

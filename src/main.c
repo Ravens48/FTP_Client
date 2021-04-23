@@ -7,7 +7,7 @@
 
 #include "../includes/my_ftp.h"
 
-void helper()
+void helper(void)
 {
     printf("USAGE: ./myftp port path\n");
     printf("\t port is the port number on wich the server socket listen\n");

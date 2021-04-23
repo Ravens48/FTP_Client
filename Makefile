@@ -1,3 +1,10 @@
+##
+## EPITECH PROJECT, 2021
+## myFtp
+## File description:
+## Makefile
+##
+
 NAME	= myftp
 
 CC		= gcc
@@ -9,8 +16,8 @@ SRCS	= src/main.c \
 		  src/checking_function.c \
 		  src/parsing_gesture.c	\
 		  src/free_my_homies.c \
-		  src/cmd/function_pointeur.c \
-		  src/cmd/function_pointeur_second.c \
+		  src/command/function_pointeur.c \
+		  src/command/function_pointeur_second.c \
 		  src/server.c
 
 OBJS	= $(SRCS:.c=.o)

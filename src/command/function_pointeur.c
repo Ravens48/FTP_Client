@@ -7,15 +7,19 @@
 
 #include "../../includes/my_ftp.h"
 
-int check_flag(char *flag)
+int check_flag(char *flag, client_t *client)
 {
-    if (flag != NULL) {
+    if (flag == NULL)
+        return -1;
+    else if (flag != NULL) {
+        printf("FLAG :%s\n", flag);
         for (int i = 0; tab_function[i].flag != "\0"; i++) {
             if ((strcmp(flag, tab_function[i].flag)) == 0) {
                 return (i);
             }
         }
     }
+    add_message_to_list("Unknow command.", "500", &client->msg);
     return (-1);
 }
 

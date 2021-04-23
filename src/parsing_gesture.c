@@ -17,7 +17,7 @@ void parsing_fd_receive(char *cmd, parse_t **parsing, client_t *client) {
     copy_cmd = strdup(cmd);
     ptr->commande = strtok(copy_cmd, " \r\n \0");
     ptr->args = strtok(NULL, "\r\n \0");
-    i = check_flag(ptr->commande);
+    i = check_flag(ptr->commande, client);
     if (i != -1) {
         tab_function[i].callback(ptr->args, client);
     }
