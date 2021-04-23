@@ -110,7 +110,6 @@ void check_read_fdset(fd_set *read_fds, int *fdmax, int fd,
 client_t **list_client);
 void check_client_write_file(client_t **list_client, fd_set *write_fds);
 void check_write_fdset(fd_set *fds, int fd, client_t **list_client);
-
 //helper
 void *pop_message(message_t **list_msg);
 void search_and_destroy(client_t **list_client, int client_fd);

@@ -9,10 +9,11 @@
 
 int check_flag(char *flag, client_t *client)
 {
-    if (flag == NULL)
+    if (flag == NULL) {
+        add_message_to_list("You send only space.", "500", &client->msg);
         return -1;
+    }
     else if (flag != NULL) {
-        printf("FLAG :%s\n", flag);
         for (int i = 0; tab_function[i].flag != "\0"; i++) {
             if ((strcmp(flag, tab_function[i].flag)) == 0) {
                 return (i);
@@ -57,7 +58,6 @@ void p_user_connect(char *args, client_t *client)
         add_message_to_list("Need account for login.", "332", &client->msg);
     }
     else {
-        //a confirmer demain en FU, si le user est deja log et qu'il refait un PASS
         client->state = UNKNOW;
         add_message_to_list("Permission denied.", "530", &client->msg);
     }

@@ -11,7 +11,8 @@ void helper(void)
 {
     printf("USAGE: ./myftp port path\n");
     printf("\t port is the port number on wich the server socket listen\n");
-    printf("\t path is the path to the home directory for the Anonymous user\n");
+    printf("\tpath is the path to the home directory for the Anonymous user\n"
+    );
 }
 
 int error_handle(int ac, char **av)

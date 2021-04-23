@@ -62,8 +62,7 @@ void new_connection(client_t **list_client, int fd, char *dir)
     }
     while (ptr->next != NULL) {
         ptr = ptr->next;
-    }
-    ptr->next = new_client;
+    } ptr->next = new_client;
 }
 
 int running_serv(int fd, char *dir)
