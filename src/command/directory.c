@@ -61,11 +61,13 @@ void p_delete_file(char *args, client_t *client)
 {
     if (client->state == LOGGED && args != NULL) {
         int del;
+        int r_access;
         char *buffer = malloc((sizeof(char) * 1024));
         snprintf(buffer, strlen(args) + strlen(client->cdir)
             +2, "%s/%s\r\n",client->cdir, args);
+        r_access = access(buffer, F_OK);
         del = remove(buffer);
-        if (del == 0)
+        if (del == 0 && r_access == 0)
             add_message_to_list("File deleted.", "250", &client->msg);
         else
             add_message_to_list("File not deleted.", "500", &client->msg);
