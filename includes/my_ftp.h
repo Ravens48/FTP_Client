@@ -96,9 +96,6 @@ int error_handle(int ac, char **av);
 
 //message
 //write messages
-
-//a utiliser directement dans le retour des fonctions definies plus tard pour ajouter le message
-//penser a clear la liste chainee une fois le message envoye
 void add_message_to_list(char *message, char *code, message_t **list_msg);
 
 void send_message_to_client(int fd, char *message, char *code);

@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2021
 ** myFtp
-** File description: gestion du parsing
-** parsgin_gesture
+** File description:
+** parsing_gesture
 */
 
 #include "../includes/my_ftp.h"
@@ -21,5 +21,4 @@ void parsing_fd_receive(char *cmd, parse_t **parsing, client_t *client) {
     if (i != -1) {
         tab_function[i].callback(ptr->args, client);
     }
-
 }
